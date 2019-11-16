@@ -22,7 +22,7 @@ function wannaBuy(weGot){
         choices: weGot.product,
     }]).then(answers => {
         if(answers.product===weGot.product[0]){
-            console.log(`GTFO!`);
+            console.log(`GTFO!!!`);
             connection.end();
         }
         else{
@@ -40,15 +40,15 @@ function howMany(product, quantity){
     }]).then(answers => {
         console.log(`Quantity: ${answers.quantity}`);
         if(answers.quantity<1){
-            console.log(`That's too few! Try again, dummy!\n\n\n`);
+            console.log(`That's too few! Try again, dummy!!!\n\n\n`);
             getStock();
         }
         else if(answers.quantity>quantity){
-            console.log(`That's too many! Try again, dummy!\n\n\n`);
+            console.log(`That's too many! Try again, dummy!!!\n\n\n`);
             getStock();
         }
         else{
-            console.log(`OK! Purchasing ${answers.quantity} of ${product}`);
+            console.log(`OK! Purchasing ${answers.quantity} of ${product}!!!`);
             subStock(product, answers.quantity);
         }
     });
@@ -59,21 +59,23 @@ function getStock(){
         product: [],
         quantity: []
     };
-    available.product[0] = "Nuthin!";
+    var stringPrice;
+    available.product[0] = "Nuthin!!!";
     available.quantity[0] = 0;
     connection.query("select * from products", function(err, response){
         console.log(`ALL PRODUCTS:\n`)
         console.log(`NAME....................................DEPT....................................PRICE.....QUANTITY\n`);
         for(let i=0; i<response.length; i++){
-            console.log(`${response[i].product_name.padEnd(40, '.')}${response[i].department_name.padEnd(40, '.')}${response[i].price}${response[i].stock_quantity}`);
+            stringPrice = response[i].price.toString(10);
+            console.log(`${response[i].product_name.padEnd(40, '.')}${response[i].department_name.padEnd(40, '.')}${stringPrice.padEnd(10, '.')}${response[i].stock_quantity}`);
             if(response[i].stock_quantity>0){
                 available.product.push(response[i].product_name);
                 available.quantity.push(response[i].stock_quantity);
             }
         }
+        console.log(`\n\n\n`)
         wannaBuy(available);
-    });
-    
+    });   
 }
 
 function subStock(product, quantity){
